@@ -1,2 +1,3 @@
-target
+*.crx
+*.pem
 .DS_Store
