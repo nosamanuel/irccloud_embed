@@ -1,0 +1,11 @@
+{
+  "name": "IRCCloud Embed",
+  "version": "0.1.0",
+  "description": "Embed IRCCloud image links as images.",
+  "content_scripts": [{
+      "all_frames": true,
+      "js": ["jquery-1.7.1.min.js", "embed.js"],
+      "matches": ["http://irccloud.com/*", "https://irccloud.com/*"]
+    }],
+  "permissions": ["https://irccloud.com/"]
+}
