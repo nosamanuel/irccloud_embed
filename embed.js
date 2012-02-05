@@ -4,12 +4,24 @@ var IRCCloudEmbed = function() {
     }
 
     function embed_image(message_row, href) {
+        // Append image to current message row
         var message = $("<div>");
-        var image = $("<img>");
         message.addClass("message");
+        var image = $("<img>");
         image.attr("src", href);
         message.append(image);
         message_row.append(message);
+
+        // Cancel any previous scroll events
+        image.addClass("irccloud-embed");
+        $("img.irccloud-embed").unbind("load");
+
+        // Scroll to end once image loads
+        $(image).load(function() {
+            var scroll = message_row.parents(".scroll")[0];
+            var log = message_row.parents(".log")[0];
+            $(scroll).animate({scrollTop: $(log).height()}, 0);
+        });
     }
 
     function embed_youtube(message_row, href) {
