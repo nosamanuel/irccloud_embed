@@ -1,6 +1,6 @@
 var IRCCloudEmbed = function() {
     function is_image_href(href) {
-        return (href.toLowerCase().match(/\.(png|jpg|jpeg|gif)$/) !== null);
+        return (/\.(png|jpg|jpeg|gif)($|\?)/i).test(href);
     }
 
     function embed_image(message_row, href) {
