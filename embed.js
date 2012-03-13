@@ -5,15 +5,32 @@ var IRCCloudEmbed = function() {
 
     function embed_image(message_row, href) {
         // Append image to current message row
-        var message = $("<div>");
+        var MEDIA_HEIGHT = 100,
+            message = $("<div>");
         message.addClass("message");
-        var image = $("<img>");
-        image.attr("src", href);
+        var image = $('<img class="irccloud-embed" height=' + MEDIA_HEIGHT + '>')
+            .error(function(){ message.remove(); })
+            .attr("src", href)
+            .load(function(){
+                var $this = $(this);
+                $this.attr('title', this.naturalWidth + " x " + this.naturalHeight);
+                if (this.naturalHeight < MEDIA_HEIGHT){
+                    $this.removeAttr('height');
+                }
+            })
+            .click(function(){
+                var $this = $(this);
+                if ($this.attr('height')){
+                    $this.removeAttr('height');
+                } else {
+                    $this.attr('height', MEDIA_HEIGHT);
+                }
+
+            });
         message.append(image);
         message_row.append(message);
 
         // Cancel any previous scroll events
-        image.addClass("irccloud-embed");
         $("img.irccloud-embed").unbind("load");
 
         // Scroll to end once image loads
