@@ -39,7 +39,7 @@ var IRCCloudEmbed = function() {
 
     function watch() {
         // Watch for new messages and embed any image links
-        $("div.log").live("DOMNodeInserted", function(event) {
+        $("#maincell").on("DOMNodeInserted", "div.log", function(event) {
             var node = $(event.target);
             if (node.hasClass("messageRow")) {
                 process_row(node);
