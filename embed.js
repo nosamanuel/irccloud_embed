@@ -1,19 +1,36 @@
 var IRCCloudEmbed = function() {
     function is_image_href(href) {
-        return (href.toLowerCase().match(/\.(png|jpg|jpeg|gif)$/) !== null);
+        return (/\.(png|jpg|jpeg|gif)($|\?)/i).test(href);
     }
 
     function embed_image(message_row, href) {
         // Append image to current message row
-        var message = $("<div>");
+        var MEDIA_HEIGHT = 100,
+            message = $("<div>");
         message.addClass("message");
-        var image = $("<img>");
-        image.attr("src", href);
+        var image = $('<img class="irccloud-embed" height=' + MEDIA_HEIGHT + '>')
+            .error(function(){ message.remove(); })
+            .attr("src", href)
+            .load(function(){
+                var $this = $(this);
+                $this.attr('title', this.naturalWidth + " x " + this.naturalHeight);
+                if (this.naturalHeight < MEDIA_HEIGHT){
+                    $this.removeAttr('height');
+                }
+            })
+            .click(function(){
+                var $this = $(this);
+                if ($this.attr('height')){
+                    $this.removeAttr('height');
+                } else {
+                    $this.attr('height', MEDIA_HEIGHT);
+                }
+
+            });
         message.append(image);
         message_row.append(message);
 
         // Cancel any previous scroll events
-        image.addClass("irccloud-embed");
         $("img.irccloud-embed").unbind("load");
 
         // Scroll to end once image loads
@@ -39,7 +56,7 @@ var IRCCloudEmbed = function() {
 
     function watch() {
         // Watch for new messages and embed any image links
-        $("div.log").live("DOMNodeInserted", function(event) {
+        $("#maincell").on("DOMNodeInserted", "div.log", function(event) {
             var node = $(event.target);
             if (node.hasClass("messageRow")) {
                 process_row(node);
