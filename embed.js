@@ -17,6 +17,10 @@ var IRCCloudEmbed = function() {
         return youtube_parser(href) !== false;
     }
 
+    function is_imgur(href){
+        return (/imgur\.com\/\w+$/i).test(href);
+    }
+
     function embed_image(message_row, href) {
         // Append image to current message row
         var MEDIA_HEIGHT = 100,
@@ -80,6 +84,12 @@ var IRCCloudEmbed = function() {
         });
     }
 
+    function embed_imgur_basic(message_row, href) {
+        var bits = href.split('/');
+        var src = "http://i.imgur.com/" + bits[bits.length - 1] + ".jpg";
+        embed_image(message_row, src);
+    }
+
     function process_row(message_row) {
         message_row.find("a.link").each(function() {
             href = $(this).attr("href") || '';
@@ -87,6 +97,8 @@ var IRCCloudEmbed = function() {
                 embed_image(message_row, href);
             } else if (is_youtube(href)) {
                 embed_youtube(message_row, href);
+            } else if (is_imgur(href)) {
+                embed_imgur_basic(message_row, href);
             }
         });
     }
