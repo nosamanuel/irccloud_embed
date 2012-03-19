@@ -18,7 +18,7 @@ var IRCCloudEmbed = function() {
     }
 
     function is_imgur(href){
-        return (/imgur\.com\/\w+$/i).test(href);
+        return (/imgur\.com\/.+$/i).test(href);
     }
 
     function embed_image(message_row, href) {
