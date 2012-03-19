@@ -90,6 +90,13 @@ var IRCCloudEmbed = function() {
         embed_image(message_row, src);
     }
 
+    function embed_imgur(message_row, href){
+        // TODO
+        var bits = href.split('/');
+        var image_id = bits[bits.length - 1];
+        var thumbnail_src = "http://i.imgur.com/" + image_id + "b.jpg";
+    }
+
     function process_row(message_row) {
         message_row.find("a.link").each(function() {
             href = $(this).attr("href") || '';
