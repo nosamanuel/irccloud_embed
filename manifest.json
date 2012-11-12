@@ -5,7 +5,7 @@
   "content_scripts": [{
       "all_frames": true,
       "js": ["jquery-1.7.1.min.js", "embed.js"],
-      "matches": ["http://irccloud.com/*", "https://irccloud.com/*"]
+      "matches": ["http://*.irccloud.com/*", "https://*.irccloud.com/*"]
     }],
-  "permissions": ["https://irccloud.com/"]
+  "permissions": ["https://*.irccloud.com/"]
 }
