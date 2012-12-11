@@ -9,12 +9,25 @@ var IRCCloudEmbed = function() {
         return false;
     }
 
+    function vimeo_parser(url) {
+        var regExp = /https?:\/\/(?:www\.)?vimeo.com\/(?:channels\/|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)/;
+        var match = url.match(regExp);
+
+        if(match) {
+            return match[3];
+        }
+    }
+
     function is_image_href(href) {
         return (/\.(png|jpg|jpeg|gif)($|\?)/i).test(href);
     }
 
     function is_youtube(href) {
         return youtube_parser(href) !== false;
+    }
+
+    function is_vimeo(href) {
+        return vimeo_parser(href) !== false;
     }
 
     function embed_image(message_row, href) {
@@ -80,6 +93,28 @@ var IRCCloudEmbed = function() {
         });
     }
 
+    function embed_vimeo(message_row, href) {
+        var videoId = vimeo_parser(href);
+        var embedString = '<iframe src="http://player.vimeo.com/video/' + videoId + '" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+        var message = $("<div>");
+        message.addClass("message");
+
+        var video = $(embedString);
+        message.append(video);
+        message_row.append(message);
+
+        // Cancel any previous scroll events
+        video.addClass("irccloud-embed");
+        $("iframe.irccloud-embed").unbind("load");
+
+        // Scroll to end once image loads
+        $(video).load(function() {
+            var scroll = message_row.parents(".scroll")[0];
+            var log = message_row.parents(".log")[0];
+            $(scroll).animate({scrollTop: $(log).height()}, 0);
+        });
+    }
+
     function process_row(message_row) {
         message_row.find("a.link").each(function() {
             href = $(this).attr("href") || '';
@@ -87,6 +122,8 @@ var IRCCloudEmbed = function() {
                 embed_image(message_row, href);
             } else if (is_youtube(href)) {
                 embed_youtube(message_row, href);
+            } else if (is_vimeo(href)) {
+                embed_vimeo(message_row, href);
             }
         });
     }
