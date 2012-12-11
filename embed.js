@@ -16,6 +16,8 @@ var IRCCloudEmbed = function() {
         if(match) {
             return match[3];
         }
+
+        return false;
     }
 
     function is_image_href(href) {
