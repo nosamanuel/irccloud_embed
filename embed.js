@@ -14,7 +14,7 @@ var IRCCloudEmbed = function() {
     }
 
     function is_youtube(href) {
-        return youtube_parser(href) != false;
+        return youtube_parser(href) !== false;
     }
 
     function embed_image(message_row, href) {
